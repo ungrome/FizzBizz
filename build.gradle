@@ -1,0 +1,50 @@
+plugins {
+    id 'java'
+    id 'application'
+    id 'se.patrikerdes.use-latest-versions' version '0.2.18'
+    id 'com.github.ben-manes.versions' version '0.47.0'
+}
+
+group = 'org.example'
+version = '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testImplementation platform('org.junit:junit-bom:5.10.0')
+    testImplementation 'org.junit.jupiter:junit-jupiter'
+    implementation 'org.apache.commons:commons-lang3:3.13.0'
+}
+
+application {
+    mainClassName = 'com.gradle.tutorial.FizzBuzzProcessor'
+}
+
+test {
+    useJUnitPlatform()
+}
+
+jar {
+    manifest {
+        attributes "Main-Class": "com.gradle.tutorial.FizzBuzzProcessor"
+    }
+
+    from {
+        configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
+    }
+}
+
+allprojects {
+    apply plugin: 'se.patrikerdes.use-latest-versions'
+    apply plugin: 'com.github.ben-manes.versions'
+}
+
+useLatestVersions {
+    updateWhitelist = []
+    updateBlacklist = []
+    updateRootProperties = false
+    versionFiles = []
+    rootVersionFiles = ['gradle.properties']
+}
